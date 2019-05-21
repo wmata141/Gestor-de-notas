@@ -3,14 +3,22 @@ import { Link } from 'react-router-dom';
 import firebase from '../../Firebase';
 import './note.css';
 
+function searchingFor(term){
+    return function(x) {
+        return x.title.toLowerCase().includes(term.toLowerCase()) || !term;
+    }
+}
+
 class List extends Component {
     constructor(props) {
         super(props);
         this.ref = firebase.firestore().collection('note');
         this.unsubscribe = null;
         this.state = {
-            note: []
+            note: [],
+            term:''
         };
+        this.searchHandle = this.searchHandle.bind(this);
     }
 
     onCollectionUpdate = (querySnapshot) => {
@@ -28,17 +36,29 @@ class List extends Component {
         this.setState({
             note
         });
-    }
+    }   
 
     componentDidMount() {
         this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
     }
 
+    searchHandle(event) {
+        this.setState({
+            term: event.target.value
+        })
+    }
+
     render() {
+        let { term, note } = this.state;
         return (
             <div className="container register">
                 <h1><span className="yellow">NOTE LIST</span></h1>
                 <h4><Link to="/create">Add Note</Link></h4>
+
+                <div className="form-group">
+                    <input value={term}required type="text" onChange={this.searchHandle} placeholder="Title" />
+                </div>
+
                 <table className="container register">
                     <thead>
                         <tr>
@@ -48,7 +68,7 @@ class List extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.note.map(board =>
+                        {note.filter(searchingFor(term)).map(board =>
                             <tr key={board.key}>
                                 <td><Link to={`/show/${board.key}`}>{board.title}</Link></td>
                                 <td>{board.description}</td>
