@@ -1,0 +1,38 @@
+body {
+	margin:0;
+	background:url(https://hdqwalls.com/download/material-design-4k-2048x1152.jpg) fixed;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.2) !important;
+}
+  
+li {
+    float: left;
+}
+  
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+  
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+    background-color: rgba(0,0,0,0.3) !important;
+    color: white
+}
+
+.btn-success {
+    background-color: transparent;
+}
+
+.btn-danger {
+    background-color: transparent;
+}
