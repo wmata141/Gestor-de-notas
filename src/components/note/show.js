@@ -52,7 +52,7 @@ class Show extends Component {
             <dt>Category:</dt>
             <dd>{this.state.note.category}</dd>
           </dl>
-          <Link to={`/edit/${this.state.key}`} className="btn btn-success">Edit</Link>&nbsp;
+          <Link to={`/note/edit/${this.state.key}`} className="btn btn-success">Edit</Link>&nbsp;
             <button onClick={this.delete.bind(this, this.state.key)} className="btn btn-danger">Delete</button>
         </div>
       </div>
