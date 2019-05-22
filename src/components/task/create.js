@@ -7,13 +7,11 @@ class Create extends Component {
 
   constructor() {
     super();
-    this.refNote = firebase.firestore().collection('note');
-    this.refCategory = firebase.firestore().collection('category');
+    this.reftask = firebase.firestore().collection('task');
     this.state = {
       title: '',
       description: '',
-      category: '',
-      categories: []
+      date: '',
     };
   }
   onChange = (e) => {
@@ -24,54 +22,33 @@ class Create extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-    const { title, description, category } = this.state;
+    const { title, description, date } = this.state;
+    console.log("this.state", this.state);
 
-    this.refNote.add({
+    this.reftask.add({
       title,
       description,
-      category
+      date
     }).then((docRef) => {
       this.setState({
         title: '',
         description: '',
-        category: ''
+        date: ''
       });
-      this.props.history.push("/note")
+      this.props.history.push("/task")
     })
       .catch((error) => {
         console.error("Error adding document: ", error);
       });
   }
 
-  onCollectionUpdate = (querySnapshot) => {
-    const categories = [];
-    querySnapshot.forEach((doc) => {
-      const { title, description } = doc.data();
-      categories.push({
-        key: doc.id,
-        doc, // DocumentSnapshot
-        title,
-        description
-      });
-    });
-    this.setState({
-      categories
-    });
-    console.log("categories[]", categories);
-
-  }
-
-  componentDidMount() {
-    this.unsubscribe = this.refCategory.onSnapshot(this.onCollectionUpdate);
-  }
-
   render() {
-    const { title, description, category } = this.state;
+    const { title, description, date } = this.state;
     return (
       <div className="container register">
-        <h1><span className="yellow">ADD NOTE</span></h1>
+        <h1><span className="yellow">ADD TASK</span></h1>
         <div className="panel-body">
-          <h4><Link to="/note">List Note</Link></h4>
+          <h4><Link to="/task">List Task</Link></h4>
           <form onSubmit={this.onSubmit}>
             <div className="form-group">
               <label htmlFor="title">Title:</label>
@@ -82,13 +59,8 @@ class Create extends Component {
               <textarea required className="form-control" name="description" value={description} onChange={this.onChange} placeholder="Description" cols="80" rows="3">{description}</textarea>
             </div>
             <div className="form-group">
-              <label htmlFor="category">Category:</label>
-              <select required className="form-control" name="category" value={category} onChange={this.onChange}>
-                <option value="">Select a Category</option>
-                {this.state.categories.map(board =>
-                  <option value={board.title}>{board.title}</option>
-                )}
-              </select>
+              <label htmlFor="date">Date:</label>
+              <input required type="date" className="form-control" name="date" value={date} onChange={this.onChange} placeholder="Date" />
             </div>
             <button type="submit" className="btn btn-success">Submit</button>
           </form>

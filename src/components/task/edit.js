@@ -6,33 +6,30 @@ class Edit extends Component {
 
   constructor(props) {
     super(props);    
-    this.refCategory = firebase.firestore().collection('category');
+    this.refTask = firebase.firestore().collection('task');
     this.state = {
       key: '',
       title: '',
       description: '',
-      category: '',
-      categories: []
+      date: ''
     };
   }
 
   componentDidMount() {
-    const ref = firebase.firestore().collection('note').doc(this.props.match.params.id);
-    ref.get().then((doc) => {
+    const refTask = firebase.firestore().collection('task').doc(this.props.match.params.id);
+    refTask.get().then((doc) => {
       if (doc.exists) {
         const board = doc.data();
         this.setState({
           key: doc.id,
           title: board.title,
           description: board.description,
-          category: board.category
+          date: board.date
         });
       } else {
         console.log("No such document!");
       }
     });
-
-    this.unsubscribe = this.refCategory.onSnapshot(this.onCollectionUpdate);
   }
 
   onChange = (e) => {
@@ -44,42 +41,25 @@ class Edit extends Component {
   onSubmit = (e) => {
     e.preventDefault();
 
-    const { title, description, category } = this.state;
+    const { title, description, date } = this.state;
 
-    const updateRef = firebase.firestore().collection('note').doc(this.state.key);
+    const updateRef = firebase.firestore().collection('task').doc(this.state.key);
     updateRef.set({
       title,
       description,
-      category
+      date
     }).then((docRef) => {
       this.setState({
         key: '',
         title: '',
         description: '',
-        category: ''
+        date: ''
       });
-      this.props.history.push("/note/show/" + this.props.match.params.id)
+      this.props.history.push("/task/show/" + this.props.match.params.id)
     })
       .catch((error) => {
         console.error("Error adding document: ", error);
       });
-  }
-
-  onCollectionUpdate = (querySnapshot) => {
-    const categories = [];
-    querySnapshot.forEach((doc) => {
-      const { title, description } = doc.data();
-      categories.push({
-        key: doc.id,
-        doc, // DocumentSnapshot
-        title,
-        description
-      });
-    });
-    this.setState({
-      categories
-    });
-    console.log("categories[]", categories);
   }
 
   render() {
@@ -87,7 +67,7 @@ class Edit extends Component {
       <div className="container register">
         <h1><span className="yellow">UPDATE NOTE</span></h1>
         <div className="panel-body">
-          <h4><Link to="/note">List Note</Link></h4>
+          <h4><Link to="/task">List Note</Link></h4>
           <form onSubmit={this.onSubmit}>
             <div className="form-group">
               <label htmlFor="title">Title:</label>
@@ -98,14 +78,8 @@ class Edit extends Component {
               <input required type="text" className="form-control" name="description" value={this.state.description} onChange={this.onChange} />
             </div>
             <div className="form-group">
-              <label htmlFor="category">Cathegory:</label>
-              <select required className="form-control" name="category" value={this.state.category} onChange={this.onChange}>
-                <option value="">Select a Category</option>
-                {this.state.categories.map(board =>
-                  <option value={board.title}>{board.title}</option>
-                )}
-              </select>
-              
+              <label htmlFor="date">Date:</label>            
+              <input required type="date" className="form-control" name="date" value={this.state.date} onChange={this.onChange} />
             </div>
             <button type="submit" className="btn btn-success">Submit</button>
           </form>

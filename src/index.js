@@ -14,7 +14,12 @@ import List from './components/note/list';
 import Show from './components/note/show';
 import Create from './components/note/create';
 import Edit from './components/note/edit';
-  
+
+import ListTask from './components/task/list';
+import ShowTask from './components/task/show';
+import CreateTask from './components/task/create';
+import EditTask from './components/task/edit';
+
 import ListCategory from './components/category/list';
 import ShowCategory from './components/category/show';
 import CreateCategory from './components/category/create';
@@ -52,23 +57,26 @@ class AppRouter extends React.Component {
 
     return (
       <Router>
-        <div>
-          <Menu></Menu>
-          <Switch>
-            <Route exact path="/" component={App} />
-            <Route path="/login" component={Login} />
+        <Menu></Menu>
+        <Switch>
+          <Route exact path="/" component={App} />
+          <Route path="/login" component={Login} />
 
-            <PrivateRoute exact path="/note" component={List} authenticated={authenticated} />
-            <PrivateRoute path="/edit/:id" component={Edit} authenticated={authenticated} />
-            <PrivateRoute path="/create" component={Create} authenticated={authenticated} />
-            <PrivateRoute path="/show/:id" component={Show} authenticated={authenticated} />
+          <PrivateRoute exact path="/note" component={List} authenticated={authenticated} />
+          <PrivateRoute path="/note/edit/:id" component={Edit} authenticated={authenticated} />
+          <PrivateRoute path="/note/create" component={Create} authenticated={authenticated} />
+          <PrivateRoute path="/note/show/:id" component={Show} authenticated={authenticated} />
 
-            <PrivateRoute exact path="/category" component={ListCategory} authenticated={authenticated} />
-            <PrivateRoute path="/category/create" component={CreateCategory} authenticated={authenticated} />
-            <PrivateRoute path="/category/show/:id" component={ShowCategory} authenticated={authenticated} />
-            <PrivateRoute path="/category/edit/:id" component={EditCategory} authenticated={authenticated} />
-          </Switch>
-        </div>
+          <PrivateRoute exact path="/task" component={ListTask} authenticated={authenticated} />
+          <PrivateRoute path="/task/create" component={CreateTask} authenticated={authenticated} />
+          <PrivateRoute path="/task/show/:id" component={ShowTask} authenticated={authenticated} />
+          <PrivateRoute path="/task/edit/:id" component={EditTask} authenticated={authenticated} />
+
+          <PrivateRoute exact path="/category" component={ListCategory} authenticated={authenticated} />
+          <PrivateRoute path="/category/create" component={CreateCategory} authenticated={authenticated} />
+          <PrivateRoute path="/category/show/:id" component={ShowCategory} authenticated={authenticated} />
+          <PrivateRoute path="/category/edit/:id" component={EditCategory} authenticated={authenticated} />
+        </Switch>
       </Router>
     );
   }
